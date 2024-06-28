@@ -1,0 +1,31 @@
+.header {
+    @apply h-fit;
+
+    .wrapper {
+        @apply flex;
+    
+        .title {
+            @apply py-[19px] mr-[5%] text-[40px] text-my leading-[42px] font-extrabold;
+        }
+    
+        .menu {
+            @apply w-fit flex py-[15px] flex-wrap;
+    
+            .menu_item {
+                @apply text-[16px] py-[16.5px] px-[15px] h-[50px] min-w-fit;
+            }
+        }
+
+        .profile {
+            @apply flex ml-auto min-w-fit;
+
+            .profile_name {
+                @apply text-xl font-bold h-fit py-[26px] mr-2;
+            }
+
+            .profile_image {
+                @apply py-[20px] max-h-[80px];
+            }
+        }
+    }
+}

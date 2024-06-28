@@ -1,0 +1,38 @@
+.antdesign {
+    :global {
+        .ant-btn-primary {
+            @apply bg-my;
+        }
+
+        .colorPrimaryHover {}
+
+        .ant-input-outlined:hover,
+        .ant-input-outlined:focus,
+        .ant-picker-outlined:hover,
+        .ant-picker-outlined:focus-within,
+        .ant-pagination-item-active,
+        .ant-pagination-item:hover {
+            @apply border-my;
+        }
+
+        .ant-pagination-item-active a {
+            @apply text-my;
+        }
+
+        .ant-select-outlined {
+            @apply border-my;
+        }
+
+        .ant-select-focused .ant-select-selector,
+        .ant-select-selector:focus,
+        .ant-select-selector:active,
+        .ant-select-selector:hover,
+        .ant-select-open .ant-select-selector {
+            border-color: #f3968f !important;
+        }
+
+        :where(.css-dev-only-do-not-override-m4timi).ant-btn-default:not(:disabled):not(.ant-btn-disabled):hover {
+            @apply border-my text-my;
+        }
+    }
+}

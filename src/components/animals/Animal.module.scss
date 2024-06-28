@@ -1,0 +1,68 @@
+.animal_item {
+    @apply w-[350px] h-[350px] bg-[#F4F6F3] rounded-[50px] relative cursor-pointer;
+
+    .animal_div_image {
+        @apply w-[350px] h-[225px] rounded-[50px] overflow-clip;
+
+        .animal_image {
+            @apply object-center w-[350px] h-[225px];
+        }
+    }
+
+    .animal_info {
+        @apply w-[350px] h-[125px];
+
+        .animal_name_and_age {
+            @apply w-[350px] h-[75px] px-[40px] flex justify-between;
+
+            .animal_name {
+                @apply text-[24px] font-bold my-[20px];
+            }
+
+            .animal_age {
+                @apply text-[#919193] text-[18px] my-[25px];
+            }
+        }
+
+        .animal_div_breed {
+            @apply w-[350px] h-[50px] px-[40px];
+
+            .animal_breed {
+                @apply text-[#919193] text-[18x] w-[250px];
+            }
+        }
+    }
+
+    .button_delete {
+        @apply w-[40px] h-[40px] rounded-[50px] absolute right-5 top-5 bg-[#919193] bg-opacity-50;
+
+        .button_delete_image {
+            @apply m-[5px];
+        }
+    }
+}
+
+.animal_list {
+    @apply flex flex-wrap gap-6 pt-6 mx-auto;
+
+    @media (min-width: 550px) {
+        width: 350px;
+    }
+    @media (min-width: 924px) {
+        width: 724px;
+    }
+    @media (min-width: 1298px) {
+        width: 1098px;
+    }
+    @media (min-width: 1672px) {
+        width: 1472px;
+    }
+}
+
+.antdesign {
+    :global {
+        .ant-btn-primary {
+            @apply bg-my;
+        }
+    }
+}

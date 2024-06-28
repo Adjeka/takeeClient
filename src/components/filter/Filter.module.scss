@@ -1,0 +1,23 @@
+.filter {
+    @apply flex mx-[30px] w-auto;
+
+    .filter_item {
+        @apply flex w-fit h-[40px] px-[10px] mr-[30px] rounded-[50px] border border-[#919193];
+    }
+
+    .filter_item_selected {
+        @apply flex w-fit h-[40px] px-[10px] mr-[30px] rounded-[50px] bg-my;
+
+        .filter_item_text {
+            @apply text-[#F4F6F3];
+        }
+    }
+
+    .filter_item_image {
+        @apply w-[35px] h-[35px] my-[2.5px] rounded-[50px] overflow-clip;
+    }
+
+    .filter_item_text {
+        @apply text-[20px] my-[5px] ml-[5px];
+    }
+}
