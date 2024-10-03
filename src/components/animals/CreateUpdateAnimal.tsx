@@ -1,6 +1,7 @@
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useState, useRef } from "react";
 import { Modal, Input, DatePicker, Select } from "antd";
 import dayjs, { Dayjs } from "dayjs";
+import utc from "dayjs/plugin/utc";
 import { Mode } from "../Mode";
 import { IAnimal } from "@/src/models/animal.interface";
 import { AnimalRequest } from "@/src/services/animals.service";
@@ -9,6 +10,8 @@ import { ICurator } from "@/src/models/curator.interface";
 import { ITypeOfAnimals } from "@/src/models/typeOfAnimals.interface";
 import TextArea from "antd/es/input/TextArea";
 import styles from "./Animal.module.scss"
+
+dayjs.extend(utc);
 
 const dateFormat = "DD.MM.YYYY";
 
@@ -42,7 +45,7 @@ export const CreateUpdateAnimal = ({
   const [height, setHeight] = useState<number>(values.height);
   const [weight, setWeight] = useState<number>(values.weight);
   const [gender, setGender] = useState<string>(values.gender);
-  const [dateOfBirth, setDateOfBirth] = useState<Dayjs | null>(values.dateOfBirth ? dayjs(values.dateOfBirth): null);
+  const [dateOfBirth, setDateOfBirth] = useState<Dayjs | null>(values.dateOfBirth ? dayjs.utc(values.dateOfBirth): null);
   const [color, setColor] = useState<string>(values.color);
   const [distinguishingMark, setDistinguishingMark] = useState<string>(values.distinguishingMark);
   const [description, setDescription] = useState<string>(values.description);
@@ -51,6 +54,8 @@ export const CreateUpdateAnimal = ({
   const [breeds, setBreeds] = useState<IBreed[]>([]);
   const [curators, setCurators] = useState<ICurator[]>([]);
   const [typesOfAnimals, setTypesOfAnimals] = useState<ITypeOfAnimals[]>([]);
+  
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     setNickname(values.nickname);
@@ -59,7 +64,7 @@ export const CreateUpdateAnimal = ({
     setHeight(values.height);
     setWeight(values.weight);
     setGender(values.gender);
-    setDateOfBirth(values.dateOfBirth ? dayjs(values.dateOfBirth) : null);
+    setDateOfBirth(values.dateOfBirth ? dayjs.utc(values.dateOfBirth) : null);
     setColor(values.color);
     setDistinguishingMark(values.distinguishingMark);
     setDescription(values.description);
@@ -88,6 +93,22 @@ export const CreateUpdateAnimal = ({
     mode == Mode.Create
       ? handleCreate(animalRequest)
       : handleUpdate(values.id, animalRequest);
+  };
+
+  const submitModal = () => {
+    setPhoto(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+    handleOnOk();
+  }
+
+  const closeModal = () => {
+    setPhoto(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+    handleCancel();
   };
 
   const handleNicknameChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -136,8 +157,8 @@ export const CreateUpdateAnimal = ({
     <Modal
       title={mode === Mode.Create ? "Добавить животное" : "Редактировать животное"}
       open={isModalOpen}
-      onOk={handleOnOk}
-      onCancel={handleCancel}
+      onOk={submitModal}
+      onCancel={closeModal}
       cancelText={"Отмена"}
     >
       <div className="animal-form">
@@ -184,7 +205,7 @@ export const CreateUpdateAnimal = ({
         <Input value={distinguishingMark} onChange={handleDistinguishingMarkChange} />
 
         <p>Описание</p>
-        <TextArea value={description} onChange={handleDescriptionChange} />
+        <TextArea rows={2} value={description} onChange={handleDescriptionChange} />
 
         <p>Куратор</p>
         <Select value={curatorId} onChange={handleCuratorChange} className="w-full">
@@ -194,7 +215,7 @@ export const CreateUpdateAnimal = ({
         </Select>
 
         <p>Фото</p>
-        <Input type="file" onChange={handlePhotoChange} />
+        <input type="file" ref={fileInputRef} onChange={handlePhotoChange} className="cursor-pointer"/>
 
       </div>
     </Modal>

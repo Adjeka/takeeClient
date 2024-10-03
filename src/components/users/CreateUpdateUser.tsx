@@ -1,10 +1,13 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
 import { Modal, Input, DatePicker, Select } from "antd";
 import dayjs, { Dayjs } from "dayjs";
+import utc from "dayjs/plugin/utc";
 import { Mode } from "../Mode";
 import { IUser } from "@/src/models/user.interface";
 import { UserRequest } from "@/src/services/users.service";
 import { IUserRole } from "@/src/models/userRole.interface";
+
+dayjs.extend(utc);
 
 const dateFormat = "DD.MM.YYYY";
 
@@ -31,7 +34,7 @@ export const CreateUpdateUser = ({
   const [surname, setSurname] = useState<string>(values.surname);
   const [name, setName] = useState<string>(values.name);
   const [patronymic, setPatronymic] = useState<string>(values.patronymic);
-  const [dateOfBirth, setDateOfBirth] = useState<Dayjs | null>(values.dateOfBirth ? dayjs(values.dateOfBirth): null);
+  const [dateOfBirth, setDateOfBirth] = useState<Dayjs | null>(values.dateOfBirth ? dayjs.utc(values.dateOfBirth): null);
   const [email, setEmail] = useState<string>(values.email);
   const [phoneNumber, setPhoneNumber] = useState<string>(values.phoneNumber);
   const [userRoleId, setUserRole_Id] = useState<string>(values.userRole.id);
@@ -43,7 +46,7 @@ export const CreateUpdateUser = ({
     setSurname(values.surname);
     setName(values.name);
     setPatronymic(values.patronymic);
-    setDateOfBirth(values.dateOfBirth ? dayjs(values.dateOfBirth) : null);
+    setDateOfBirth(values.dateOfBirth ? dayjs.utc(values.dateOfBirth) : null);
     setEmail(values.email);
     setPhoneNumber(values.phoneNumber);
     setUserRole_Id(values.userRole.id);

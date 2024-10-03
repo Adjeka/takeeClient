@@ -27,5 +27,13 @@
                 @apply py-[20px] max-h-[80px];
             }
         }
+
+        .favourites {
+            @apply flex mr-4 min-w-fit;
+
+            .favourites_image {
+                @apply py-[25px] max-h-[80px]; 
+            }
+        }
     }
 }

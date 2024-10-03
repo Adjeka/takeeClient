@@ -34,5 +34,14 @@
         :where(.css-dev-only-do-not-override-m4timi).ant-btn-default:not(:disabled):not(.ant-btn-disabled):hover {
             @apply border-my text-my;
         }
+
+        :where(.css-dev-only-do-not-override-m4timi).ant-btn-primary:not(:disabled):not(.ant-btn-disabled):hover {
+            @apply bg-my shadow-lg;
+        }
+
+        :where(.css-dev-only-do-not-override-m4timi).ant-input-affix-wrapper >input.ant-input:focus,
+        :where(.css-dev-only-do-not-override-m4timi).ant-input-outlined:focus-within {
+            @apply border-my;
+        }
     }
 }

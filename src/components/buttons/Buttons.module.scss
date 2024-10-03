@@ -5,3 +5,11 @@
 .button_export {
     @apply mr-[30px] w-fit h-[40px] px-[25px] rounded-[50px] bg-[#33c481] text-[18px] text-[#FFFFFF];
 }
+
+.button_login {
+    @apply ml-auto w-fit h-[40px] px-[25px] rounded-[50px] bg-my text-[18px] text-[#FFFFFF];
+}
+
+.button_register {
+    @apply ml-[10px] w-fit h-[40px] px-[25px] rounded-[50px] bg-my text-[18px] text-[#FFFFFF];
+}

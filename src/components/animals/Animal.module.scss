@@ -5,7 +5,7 @@
         @apply w-[350px] h-[225px] rounded-[50px] overflow-clip;
 
         .animal_image {
-            @apply object-center w-[350px] h-[225px];
+            @apply object-cover w-[100%] h-[100%];
         }
     }
 

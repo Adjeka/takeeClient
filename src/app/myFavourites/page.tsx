@@ -1,24 +1,22 @@
 "use client"
 
-import AnimalsList from "../components/animals/AnimalsList";
-import ButtonAdd from "../components/buttons/ButtonAdd";
-import Filter from "../components/filter/Filter";
-import { IAnimal } from "../models/animal.interface";
-import { AnimalRequest, AnimalService } from "../services/animals.service";
+import AnimalsList from "../../components/animals/AnimalsList";
+import ButtonAdd from "../../components/buttons/ButtonAdd";
+import Filter from "../../components/filter/Filter";
+import { IAnimal } from "../../models/animal.interface";
+import { AnimalRequest, AnimalService } from "../../services/animals.service";
 import React, { useEffect, useState } from 'react';
 import { Button, Modal, Typography } from "antd";
-import { Mode } from "../components/Mode";
-import { IBreed } from "../models/breed.interface";
-import { ICurator } from "../models/curator.interface";
-import { ITypeOfAnimals } from "../models/typeOfAnimals.interface";
-import { CreateUpdateAnimal } from "../components/animals/CreateUpdateAnimal";
-import { BreedService } from "../services/breeds.service";
-import { CuratorService } from "../services/curators.service";
-import { TypeOfAnimalsService } from "../services/typesOfAnimals.service";
-import { utils, writeFile } from "xlsx";
-import dayjs from "dayjs";
-import ButtonExport from "../components/buttons/ButtonExport";
-import { FavouriteRequest, FavouriteService } from "../services/favourites.service";
+import { Mode } from "../../components/Mode";
+import { IBreed } from "../../models/breed.interface";
+import { ICurator } from "../../models/curator.interface";
+import { ITypeOfAnimals } from "../../models/typeOfAnimals.interface";
+import { CreateUpdateAnimal } from "../../components/animals/CreateUpdateAnimal";
+import { BreedService } from "../../services/breeds.service";
+import { CuratorService } from "../../services/curators.service";
+import { TypeOfAnimalsService } from "../../services/typesOfAnimals.service";
+import { FavouriteRequest, FavouriteService } from "../../services/favourites.service";
+import { IFavourite } from "@/src/models/favourite.interface";
 
 const { Title } = Typography;
 
@@ -48,6 +46,7 @@ export default function AnimalPage() {
     const [typesOfAnimalsArray, setTypesOfAnimals] = useState<ITypeOfAnimals[]>([]);
     
     const [key, setKey] = useState(0);
+    const userId = localStorage.getItem("userId");
 
     const resetComponent = () => {
         setKey(prevKey => prevKey + 1);
@@ -55,9 +54,12 @@ export default function AnimalPage() {
 
     useEffect(() => {
         const fetchData = async () => {
-            const fetchedAnimals = await AnimalService.getAllAnimals();
-            setAnimals(fetchedAnimals);
-            setLoading(false);
+            if (userId !== null) {
+                const fetchedFavourites: IFavourite[] = await FavouriteService.getFavouritesByUserId(userId);
+                fetchedFavourites.map(favourite => favourite.animal);
+                setAnimals(fetchedFavourites.map(favourite => favourite.animal));
+                setLoading(false);
+            }
 
             const fetchedBreeds = await BreedService.getAllBreeds();
             setBreeds(fetchedBreeds);
@@ -99,13 +101,12 @@ export default function AnimalPage() {
 
     const handleDeleteAnimalFromFavourites = async (id: string) => {
         await FavouriteService.deleteFavourite(id);
-        resetComponent();
-    };
-
-    const openModal = () => {
-        setValues(defaultValues);
-        setMode(Mode.Create);
-        setIsModalOpen(true);
+        if (userId !== null) {
+            const fetchedFavourites: IFavourite[] = await FavouriteService.getFavouritesByUserId(userId);
+            fetchedFavourites.map(favourite => favourite.animal);
+            setAnimals(fetchedFavourites.map(favourite => favourite.animal));
+            setLoading(false);
+        }
     };
 
     const closeModal = () => {
@@ -119,59 +120,19 @@ export default function AnimalPage() {
         setIsModalOpen(true);
     };
 
-    const exportData = async () => {
-        let tableData: any[] = [];
-        animals.map((animal: IAnimal) =>
-          tableData.push({
-            Кличка: animal.nickname,
-            Вид_животного: animal.typeOfAnimals.name,
-            Порода: animal.breed.name,
-            Рост_см: animal.height,
-            Вес_кг: animal.weight,
-            Пол: animal.gender,
-            Дата_рождения: dayjs(animal.dateOfBirth).format("DD.MM.YYYY"),
-            Окрас: animal.color,
-            Отличительная_особенность: animal.distinguishingMark,
-            Описание: animal.description,
-            Куратор: `${animal.curator.surname} ${animal.curator.name} ${animal.curator.patronymic}`,
-          })
-        );
-        var wb = utils.book_new(),
-          ws = utils.json_to_sheet(tableData);
-        utils.book_append_sheet(wb, ws, "Животные");
-        writeFile(wb, "Животные.xlsx");
-      };
-
     return (
         <div>
             {loading ? (
                 <Title>Loading</Title>
             ) : (
-                localStorage.getItem("role") == "admin" ? (
-                    <div>
-                        <div className="flex flex-row-reverse">
-                            <ButtonExport handleExport={exportData} />
-                            <ButtonAdd handleOpen={openModal} />
-                        </div>
-                        <AnimalsList
-                            animals={animals}
-                            handleDelete={handleDeleteAnimal}
-                            handleAddToFavourites={handleAddAnimalToFavourites}
-                            handleDeleteFromFavourites={handleDeleteAnimalFromFavourites}
-                            handleOpen={openEditModal}
-                            key={key}
-                        />
-                    </div>
-                ) : (
-                    <AnimalsList
-                        animals={animals}
-                        handleDelete={handleDeleteAnimal}
-                        handleAddToFavourites={handleAddAnimalToFavourites}
-                        handleDeleteFromFavourites={handleDeleteAnimalFromFavourites}
-                        handleOpen={openEditModal}
-                        key={key}
-                    />
-                )
+                <AnimalsList
+                    animals={animals}
+                    handleDelete={handleDeleteAnimal}
+                    handleAddToFavourites={handleAddAnimalToFavourites}
+                    handleDeleteFromFavourites={handleDeleteAnimalFromFavourites}
+                    handleOpen={openEditModal}
+                    key={key}
+                />
             )}
 
             <CreateUpdateAnimal
